@@ -20,9 +20,29 @@ public class Player : MonoBehaviour
         Vector2 inputMovementVector = playerInputScript.PlayerInputNormalized();
 
         Vector3 moveDirection = new Vector3(inputMovementVector.x, 0f, inputMovementVector.y);
-        
-        //canMove = ! Physics.Raycast(transform.position, moveDirection, playerRadius);
+
         canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirection, moveDistance);
+
+        if(!canMove)
+        {
+            Vector3 moveDirectionX = new Vector3(moveDirection.x, 0f, 0f);
+            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirectionX, moveDistance);
+
+            if(canMove)
+            {
+                moveDirection = moveDirectionX;
+            }
+            else
+            {
+                Vector3 moveDirectionZ = new Vector3(0f, 0f, moveDirection.z);
+                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirectionZ, moveDistance);
+
+                if(canMove)
+                {
+                    moveDirection = moveDirectionZ;
+                }
+            }
+        } 
 
         if(canMove)
         {
