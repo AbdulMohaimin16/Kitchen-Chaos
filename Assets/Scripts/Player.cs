@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
 
         if(!canMove)
         {
-            Vector3 moveDirectionX = new Vector3(moveDirection.x, 0f, 0f);
+            Vector3 moveDirectionX = new Vector3(moveDirection.x, 0f, 0f).normalized;
             canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirectionX, moveDistance);
 
             if(canMove)
@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                Vector3 moveDirectionZ = new Vector3(0f, 0f, moveDirection.z);
+                Vector3 moveDirectionZ = new Vector3(0f, 0f, moveDirection.z).normalized;
                 canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirectionZ, moveDistance);
 
                 if(canMove)
