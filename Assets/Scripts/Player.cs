@@ -11,14 +11,24 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        float playerRadius = 0.7f;
+        float playerHeight = 2f;
+        float moveDistance = movementSpeed * Time.deltaTime;
+        bool canMove;
+
 
         Vector2 inputMovementVector = playerInputScript.PlayerInputNormalized();
 
         Vector3 moveDirection = new Vector3(inputMovementVector.x, 0f, inputMovementVector.y);
+        
+        //canMove = ! Physics.Raycast(transform.position, moveDirection, playerRadius);
+        canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirection, moveDistance);
 
-        transform.position += moveDirection * movementSpeed * Time.deltaTime;
+        if(canMove)
+        {
+            transform.position += moveDirection * moveDistance;
+        }
 
-    
         isWalking = moveDirection != Vector3.zero;
       
 
