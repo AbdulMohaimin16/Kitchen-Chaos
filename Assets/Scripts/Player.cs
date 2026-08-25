@@ -6,8 +6,11 @@ public class Player : MonoBehaviour
     public float movementSpeed = 10f;
     [SerializeField] private LayerMask countersLayerMask;
 
+
+    [SerializeField] private ClearCounter selectedCounter;
     private Vector3 lastInteractionPosition;
     private bool isWalking;
+
    
    public PlayerInput playerInputScript;
 
@@ -18,24 +21,8 @@ public class Player : MonoBehaviour
 
     private void PlayerInputScript_OnInteraction(object sender, System.EventArgs e)
     {
-        float interactionDistance = 2f;
-        Vector2 inputMovementVector = playerInputScript.PlayerInputNormalized();
-
-        Vector3 moveDirection = new Vector3(inputMovementVector.x, 0f, inputMovementVector.y);
-
-        if(moveDirection != Vector3.zero)
-        {
-            lastInteractionPosition = moveDirection;
-        }   
-
-        if(Physics.Raycast(transform.position, lastInteractionPosition, out RaycastHit raycastGameObjectHit, interactionDistance, countersLayerMask))
-        {
-            if(raycastGameObjectHit.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                clearCounter.Interact();
-            }
-        }
-        
+        if(selectedCounter != null)
+            selectedCounter.Interact();   
     }
     // Update is called once per frame
     private void Update()
@@ -66,9 +53,21 @@ public class Player : MonoBehaviour
         {
             if(raycastGameObjectHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                clearCounter.Interact();
+                if (clearCounter != selectedCounter)
+                {
+                    selectedCounter = clearCounter;
+                }
+                else
+                {
+                    selectedCounter = null;
+                }
+            }
+            else
+            {
+                selectedCounter = null;
             }
         }
+        Debug.Log(selectedCounter);
         
     }
 
