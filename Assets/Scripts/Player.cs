@@ -10,6 +10,33 @@ public class Player : MonoBehaviour
     private bool isWalking;
    
    public PlayerInput playerInputScript;
+
+   private void Start()
+    {
+        playerInputScript.OnInteractAction += PlayerInputScript_OnInteraction;
+    }
+
+    private void PlayerInputScript_OnInteraction(object sender, System.EventArgs e)
+    {
+        float interactionDistance = 2f;
+        Vector2 inputMovementVector = playerInputScript.PlayerInputNormalized();
+
+        Vector3 moveDirection = new Vector3(inputMovementVector.x, 0f, inputMovementVector.y);
+
+        if(moveDirection != Vector3.zero)
+        {
+            lastInteractionPosition = moveDirection;
+        }   
+
+        if(Physics.Raycast(transform.position, lastInteractionPosition, out RaycastHit raycastGameObjectHit, interactionDistance, countersLayerMask))
+        {
+            if(raycastGameObjectHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                clearCounter.Interact();
+            }
+        }
+        
+    }
     // Update is called once per frame
     private void Update()
     {
