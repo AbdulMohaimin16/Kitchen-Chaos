@@ -1,7 +1,16 @@
 using UnityEngine;
+using System;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
+
+    public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+    public class OnSelectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectedCounter;
+    }
     
     public float movementSpeed = 10f;
     [SerializeField] private LayerMask countersLayerMask;
@@ -13,6 +22,14 @@ public class Player : MonoBehaviour
 
    
    public PlayerInput playerInputScript;
+
+   private void Awake()
+    {
+        if(Instance != null)
+            Debug.LogError("There is more than one Player instance");
+
+        Instance = this;
+    }
 
    private void Start()
     {
@@ -55,16 +72,16 @@ public class Player : MonoBehaviour
             {
                 if (clearCounter != selectedCounter)
                 {
-                    selectedCounter = clearCounter;
+                    SetSelectedCounter(clearCounter);
                 }
                 else
                 {
-                    selectedCounter = null;
+                    SetSelectedCounter(null);
                 }
             }
             else
             {
-                selectedCounter = null;
+                SetSelectedCounter(null);
             }
         }
         Debug.Log(selectedCounter);
@@ -120,5 +137,13 @@ public class Player : MonoBehaviour
         
     }
     
+    private void SetSelectedCounter(ClearCounter selectedCounter)
+    {
+        this.selectedCounter = selectedCounter;
 
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
+        {
+            selectedCounter = selectedCounter
+        });
+    }
 }
