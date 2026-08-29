@@ -74,15 +74,15 @@ public class Player : MonoBehaviour
                 {
                     SetSelectedCounter(clearCounter);
                 }
-                else
-                {
-                    SetSelectedCounter(null);
-                }
             }
             else
             {
                 SetSelectedCounter(null);
             }
+        }
+        else
+        {
+            SetSelectedCounter(null);
         }
         Debug.Log(selectedCounter);
         
@@ -139,6 +139,9 @@ public class Player : MonoBehaviour
     
     private void SetSelectedCounter(ClearCounter selectedCounter)
     {
+        if (this.selectedCounter == selectedCounter)
+            return;
+
         this.selectedCounter = selectedCounter;
 
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
