@@ -2,38 +2,23 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour
+public class ClearCounter : MonoBehaviour, IKitchenObjectParent
 {
     [SerializeField] private KitchenObjectScriptableObject kitchenObjectSO;
     [SerializeField] private Transform counterTopPoint;
-    
-    [SerializeField] private ClearCounter secondClearCounter;
-    
-    [SerializeField] private bool testing;
 
-    private GetKitchenObjectType getkitchenObjectType;
+    private GetKitchenObjectType getKitchenObjectType;
 
-    private void Update()
+    public void Interact(Player player)
     {
-        if(testing && Input.GetKeyDown(KeyCode.T))
-        {
-            if(getkitchenObjectType != null)
-            {
-                getkitchenObjectType.SetClearCounter(secondClearCounter);
-            }
-        }
-    }
-
-    public void Interact()
-    {
-      if(getkitchenObjectType == null)
+      if(getKitchenObjectType == null)
         {
             GameObject kitchenObjectGameObject = Instantiate(kitchenObjectSO.prefab, counterTopPoint);
-            kitchenObjectGameObject.transform.GetComponent<GetKitchenObjectType>().SetClearCounter(this);
+            kitchenObjectGameObject.transform.GetComponent<GetKitchenObjectType>().SetKitchenObjectParent(this);
         }
         else
         {
-            Debug.Log(getkitchenObjectType.GetClearCounter());
+            getKitchenObjectType.SetKitchenObjectParent(player);
         }  
     }
 
@@ -44,21 +29,21 @@ public class ClearCounter : MonoBehaviour
 
     public void SetKitchenObject(GetKitchenObjectType getKitchenObjectType)
     {
-        this.getkitchenObjectType = getKitchenObjectType;
+        this.getKitchenObjectType = getKitchenObjectType;
     }
 
     public GetKitchenObjectType GetKitchenObject()
     {
-        return getkitchenObjectType;
+        return getKitchenObjectType;
     }
 
     public void ClearKitchenObject()
     {
-        getkitchenObjectType = null;
+        getKitchenObjectType = null;
     }
 
     public bool HasKitchenObject()
     {
-        return getkitchenObjectType != null;
+        return getKitchenObjectType != null;
     }
 }
