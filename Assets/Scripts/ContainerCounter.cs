@@ -9,8 +9,9 @@ public class ContainerCounter : BaseCounter
     public event EventHandler OnPlayerGrabbedObject;
     public override void Interact(Player player)
     {
-      if(!HasKitchenObject())
+      if(!player.HasKitchenObject())
         {
+            // Player is not carrying anything 
             GameObject kitchenObjectGameObject = Instantiate(kitchenObjectSO.prefab);
             kitchenObjectGameObject.transform.GetComponent<GetKitchenObjectType>().SetKitchenObjectParent(player);
 
